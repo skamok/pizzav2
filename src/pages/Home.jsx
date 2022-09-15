@@ -1,21 +1,27 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Categories from '../components/Categories';
 import Sort from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import PizzaBlockSkeleton from '../components/PizzaBlock/PizzaBlockSkeleton';
 import Pagination from '../components/Pagination';
+import { SearchContext } from '../App';
+import { setCategoryId, setSortType } from '../redux/slices/filterSlice';
 
-const Home = ({ searchValue }) => {
+const Home = () => {
   // React skeleton use for blank fake data
+  const { searchValue } = React.useContext(SearchContext);
   const [pizzas, setPizzas] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
-  const [categoryId, setCategoryId] = React.useState(0);
+  // const [categoryId, setCategoryId] = React.useState(0);
   const [sortType, setSortType] = React.useState({
     name: 'популярности',
     sortProperty: 'rating',
   });
   const [currentPage, setCurrentPage] = React.useState(1);
+  const dispatch = useDispatch();
+  const categoryId = useSelector((store) => store.filter.categoryId);
 
   React.useEffect(() => {
     setIsLoading(true);
@@ -41,7 +47,7 @@ const Home = ({ searchValue }) => {
       <div className="content__top">
         <Categories
           value={categoryId}
-          onChangeCategory={(index) => setCategoryId(index)}
+          onChangeCategory={(index) => dispatch(setCategoryId(index))}
         />
         <Sort value={sortType} onChangeSort={(obj) => setSortType(obj)} />
       </div>
